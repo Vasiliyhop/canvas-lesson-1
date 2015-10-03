@@ -36,4 +36,11 @@ function curves(canvas, ctx) {
     ctx.fillStyle = grd;
     ctx.fill();
     ctx.restore();
+
+    var grd = ctx.createRadialGradient(350, 260, 0, 350, 260, 50);
+    grd.addColorStop(0, '#cfc');
+    grd.addColorStop(0.6, 'blue');
+    grd.addColorStop(1, '#369');
+    ctx.fillStyle = grd;
+    ctx.fillRect(300, 210, 100, 100);
 }
