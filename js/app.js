@@ -38,7 +38,7 @@ function drawFractal() {
 	clear();
 	interval = setInterval(function(){
 		fractal(canvas, context);
-	}, 1000);
+	}, 500);
 }
 function navigate(targetClass) {
 	'use strict';
