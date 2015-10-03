@@ -30,12 +30,13 @@ function fractal(canvas, context, repeatDelay) {
         imgData = context.createImageData(xSize, ySize);
         pixels = imgData.data;
 
-        var mr0 = 0, mg0 = 0, mb0 = 0;
+        var mr0 = 0, mg0 = 0, mb0 = 0, D = 0;
         
         mr0 = Math.pow(2, Math.ceil(Math.random() * 3 + 2));
         mg0 = Math.pow(2, Math.ceil(Math.random() * 3 + 2));
         mb0 = Math.pow(2, Math.ceil(Math.random() * 3 + 2)); 
-        
+        D = (Math.random() * 2 + 1)/2;
+
         var mr1 = 256 / mr0,
             mg1 = 256 / mg0,
             mb1 = 256 / mb0;
@@ -43,9 +44,9 @@ function fractal(canvas, context, repeatDelay) {
         var z, nz, i;
 
         for (var y = 0; y < ySize; y++) {
-            ny = ymin + (ymax - ymin) * y / ySize;
+            ny = ymin + (ymax - ymin) * y / ySize * D;
             for (var x = 0; x < xSize; x++) {
-                nx = xmin + (xmax - xmin) * x / xSize;
+                nx = xmin + (xmax - xmin) * x / xSize * D;
                     z = new Complex(0, 0);
                     nz = new Complex(nx,ny);
                     i = 0;
