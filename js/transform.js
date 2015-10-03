@@ -16,6 +16,9 @@ function transform(canvas, ctx) {
         ctx.font = '30pt Calibri';
         ctx.textAlign = 'center';
         ctx.strokeText(i+1, 50, -150);
+        ctx.font = '15pt Calibri';
+        ctx.lineWidth = 1.5;
+        ctx.strokeText('La\'Soft', 50, -100);
         ctx.rotate(Math.PI / 8);
     }
     ctx.restore();
