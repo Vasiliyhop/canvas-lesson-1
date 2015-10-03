@@ -1,11 +1,13 @@
 /*exported main*/
-/*global fractal, lines, curves, transform, images*/
+/*global fractal, lines, curves, transform, images, clearFractalInterval*/
 
-var canvas,context,interval;
+var canvas,context,
+	repeatDelay = 3000;
+
 function clear() {
 	'use strict';
 
-	clearInterval(interval);
+	clearFractalInterval();
 	context.clearRect(0, 0, canvas.width, canvas.height);
 }
 function drawLines() {
@@ -36,9 +38,7 @@ function drawFractal() {
 	'use strict';
 
 	clear();
-	interval = setInterval(function(){
-		fractal(canvas, context);
-	}, 500);
+	fractal(canvas, context, repeatDelay);
 }
 function navigate(targetClass) {
 	'use strict';

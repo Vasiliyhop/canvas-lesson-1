@@ -1,51 +1,74 @@
-/*exported fractal*/
-function fractal(canvas, context) {
-	'use strict';
-    var xr = context.canvas.width;
-    var yr = context.canvas.height;
-    var imgd = context.createImageData(xr, yr);
-    var pix = imgd.data;
+/*exported fractal, clearFractalInterval*/
+var interval;
+function fractal(canvas, context, repeatDelay) {
+    'use strict';
+    var xSize = canvas.width,
+        ySize = canvas.height,
+        imgData ,
+        pixels;
 
-    var xmin = -2.0; var xmax = 1.0;
-    var ymin = -1.5; var ymax = 1.5;
+    var Complex = function (re, im) {
+        this.re = re || 0;
+        this.im = im || 0;
+    };
+    Complex.prototype.add = function (value) {
+            return new Complex(this.re + value.re, this.im + value.im);
+        };
+    Complex.prototype.sqr = function () {
+        return new Complex(this.re*this.re - this.im*this.im,
+            2*this.re*this.im);
+    };
+    Complex.prototype.abs = function () {
+        return Math.sqrt(this.re*this.re + this.im*this.im);
+    };
 
-    // these are for coloring the image
-    var mr0 = 0; var mg0 = 0; var mb0 = 0;
-    while(mr0 === mg0 || mr0 === mb0 || mg0 === mb0) 
-    {
-        mr0 = Math.pow(2, Math.ceil(Math.random() * 3 + 3));
-        mg0 = Math.pow(2, Math.ceil(Math.random() * 3 + 3));
-        mb0 = Math.pow(2, Math.ceil(Math.random() * 3 + 3)); 
-    }
-    var mr1 = 256 / mr0; var mg1 = 256 / mg0; var mb1 = 256 / mb0;
+    var xmin = -2.0, xmax = 1.0,
+        ymin = -1.5, ymax = 1.5,
+        ny,nx;
 
-    var maxIt = 256;
-    var x = 0.0; var y = 0.0;
-    var zx = 0.0; var zx0 = 0.0; var zy = 0.0;
-    var zx2 = 0.0; var zy2 = 0.0;
+    function draw() {
+        imgData = context.createImageData(xSize, ySize);
+        pixels = imgData.data;
 
-    for (var ky = 0; ky < yr; ky++)
-    {
-        y = ymin + (ymax - ymin) * ky / yr;
-        for(var kx = 0; kx < xr; kx++)
-        {
-            x = xmin + (xmax - xmin) * kx / xr;
-            zx = x; zy = y;
-            for(var i = 0; i < maxIt; i++)
-            {
-                zx2 = zx * zx; zy2 = zy * zy;
-                if(zx2 + zy2 > 4.0) break;
-                zx0 = zx2 - zy2 + x;
-                zy = 2.0 * zx * zy + y;
-                zx = zx0;
+        var mr0 = 0, mg0 = 0, mb0 = 0;
+        
+        mr0 = Math.pow(2, Math.ceil(Math.random() * 3 + 2));
+        mg0 = Math.pow(2, Math.ceil(Math.random() * 3 + 2));
+        mb0 = Math.pow(2, Math.ceil(Math.random() * 3 + 2)); 
+        
+        var mr1 = 256 / mr0,
+            mg1 = 256 / mg0,
+            mb1 = 256 / mb0;
+
+        var z, nz, i;
+
+        for (var y = 0; y < ySize; y++) {
+            ny = ymin + (ymax - ymin) * y / ySize;
+            for (var x = 0; x < xSize; x++) {
+                nx = xmin + (xmax - xmin) * x / xSize;
+                    z = new Complex(0, 0);
+                    nz = new Complex(nx,ny);
+                    i = 0;
+                while (i < 255 && z.abs() < 2) {
+                    z = nz.add(z.sqr());
+                    i++;
+                }
+                
+                var p = (xSize * y + x) * 4;
+                pixels[p] = i % mr0 * mr1;
+                pixels[p + 1] = i % mg0 * mg1;
+                pixels[p + 2] = i % mb0 * mb1;
+                pixels[p + 3] = 255;
             }
-            var p = (xr * ky + kx) * 4;
-            pix[p] = i % mr0 * mr1;     // red
-            pix[p + 1] = i % mg0 * mg1; // green
-            pix[p + 2] = i % mb0 * mb1; // blue
-            pix[p + 3] = 255;           // alpha
         }
+        context.putImageData(imgData, 0, 0);
     }
-
-    context.putImageData(imgd, 0, 0);
+    draw();
+    interval = setInterval(function(){
+        draw();
+    }, repeatDelay);
+}
+function clearFractalInterval() {
+    'use strict';
+    clearInterval(interval);
 }
