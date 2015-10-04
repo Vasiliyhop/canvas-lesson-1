@@ -24,6 +24,7 @@
         'png': 'image/png',
         'gif': 'image/gif',
         'mp3': 'audio/mpeg',
+        'mp4': 'video/mp4',
         'ogg': 'audio/ogg',
         'wav': 'audio/wav',
         'woff':'application/font-woff',
@@ -46,9 +47,17 @@
         var mimeType = mimeTypes[Ext];
         fs.exists(filename, function(exists) {
             if (exists) {
+                var stat,
+                    range,
+                    positions,
+                    start,
+                    total,
+                    end,
+                    chunksize;
+
                 if (mimeType==='audio/mpeg'||
                     mimeType==='audio/ogg'||mimeType==='audio/wav') {
-                    var stat = fs.statSync(filename);
+                    stat = fs.statSync(filename);
                     statusCode = 200;
                     header = {
                         'Cache-Control': 'max-age=29030400',
@@ -58,21 +67,50 @@
                         'Date':new Date(),
                         'Server':'node'
                     };
+                } else if (mimeType==='video/mp4') {
+                    console.log('this>>>');
+                    stat = fs.statSync(filename);
+                        range = req.headers.range;
+                        positions = range.replace(/bytes=/, '').split('-');
+                        start = parseInt(positions[0], 10);
+                        total = stat.size;
+                        end = positions[1] ? 
+                            parseInt(positions[1], 10) : total - 1;
+                        chunksize = (end - start) + 1;
+                    statusCode = 206;
+                    header = {
+                        'Cache-Control': 'max-age=2592000',
+                        'Content-Range': 'bytes ' + 
+                            start + '-' + end + '/' + total,
+                        'Accept-Ranges': 'bytes',
+                        'Content-Length': chunksize,
+                        'Content-Type': 'video/mp4'
+                    };
                 } else {
                    statusCode = 200;
                    header = {'Content-Type':mimeType};
                 }
                 res.writeHead(statusCode, header);
+                if (mimeType==='video/mp4') {
+                    var stream = fs.createReadStream(filename, 
+                        { start: start, end: end })
+                        .on('open', function() {
+                          stream.pipe(res);
+                        }).on('error', function(err) {
+                          res.end(err);
+                        });
+                } else {
                 var fileStream = fs.createReadStream(filename);
-                if (filename.split('.')[1] !== 'ico') {
-                    console.log('Reading ...'+ filename);
+                    if (filename.split('.')[1] !== 'ico') {
+                        console.log('Reading ...'+ filename);
+                    }
+                    fileStream.on('data', function (data) {
+                        res.write(data);
+                    });
+                    fileStream.on('end', function() {
+                        res.end();
+                    });
                 }
-                fileStream.on('data', function (data) {
-                    res.write(data);
-                });
-                fileStream.on('end', function() {
-                    res.end();
-                });
             }
         });
     }).listen(port, host);

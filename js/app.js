@@ -1,13 +1,15 @@
 /*exported main*/
-/*global fractal, lines, curves, transform, images, clearFractalInterval*/
+/*global fractal,lines,curves,transform,images,
+videos,clearFractalInterval, stopVideo*/
 
-var canvas,context,
+var canvas,context,video,
 	repeatDelay = 3000;
 
 function clear() {
 	'use strict';
 
 	clearFractalInterval();
+	stopVideo();
 	context.clearRect(0, 0, canvas.width, canvas.height);
 }
 function drawLines() {
@@ -34,6 +36,12 @@ function drawImages() {
 	clear();
 	images(canvas, context);
 }
+function drawVideo() {
+	'use strict';
+
+	clear();
+	videos(canvas, context, video);
+}
 function drawFractal() {
 	'use strict';
 
@@ -54,6 +62,9 @@ function navigate(targetClass) {
 			break;
 		case 'images':
 			drawImages();
+			break;
+		case 'video':
+			drawVideo();
 			break;
 		case 'fractal':
 			drawFractal();
@@ -80,6 +91,7 @@ function main(){
 	'use strict';
 	canvas = $('#canvas')[0];
 	context = canvas.getContext('2d');
+	video = $('#nVideo')[0];
 
 	bindEvents();
 }

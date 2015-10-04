@@ -21,8 +21,8 @@ function filter(canvas, ctx){
     }
 
     ctx.putImageData(imgData1,25,325);
-    //...........................
 
+    // use blur filter 
     var imgData2 = ctx.getImageData(475, 25,300, 250);
     ctx.putImageData(imgData2,475,325);
     stackBlurCanvasRGBA( 'canvas', 475, 325, 300, 250, 10 );

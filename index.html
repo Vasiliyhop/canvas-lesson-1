@@ -11,6 +11,7 @@
 	<script src="js/curves.js" type="text/javascript" charset="utf-8"></script>
 	<script src="js/transform.js" type="text/javascript" charset="utf-8"></script>
 	<script src="js/images.js" type="text/javascript" charset="utf-8"></script>
+	<script src="js/video.js" type="text/javascript" charset="utf-8"></script>
 	<script src="js/fractal.js" type="text/javascript" charset="utf-8"></script>
 	<script src="js/app.js" type="text/javascript" charset="utf-8"></script>
 </head>
@@ -33,12 +34,19 @@
 		<a href="#curves" class="curves">Curves</a> |
 		<a href="#transform" class="transform">Transform</a> |
 		<a href="#images" class="images">Images</a> |
+		<a href="#video" class="video">Video</a> |
 		<a href="#fractal" class="fractal">Fractal</a>
 	</nav>
 	<section class="content" id="section">
 		<div class="container">
 			<canvas class="canvas" id="canvas" width="800px" height="600px"></canvas>
 		</div>
+	</section>
+	<section class="video" id="section2">
+		<video id="nVideo" autoplay="true" loop="true"
+			style="display:none;">
+ 			<source src="resources/videos/demo.mp4" type="video/mp4"/>
+		</video>
 	</section>
 	<footer class="footer">
 		<a href="http://cheatsheetworld.com/programming/html5-canvas-cheat-sheet/">Canvas cheat sheet</a><br>
