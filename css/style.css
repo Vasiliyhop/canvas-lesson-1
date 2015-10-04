@@ -27,6 +27,9 @@ h3 {
     margin-right: auto;
     display: block;
 }
+.nVideo {
+	display: none;
+}
 .footer {
 	padding-bottom: 10px;
 	text-align: center;

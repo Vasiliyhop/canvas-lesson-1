@@ -68,7 +68,6 @@
                         'Server':'node'
                     };
                 } else if (mimeType==='video/mp4') {
-                    console.log('this>>>');
                     stat = fs.statSync(filename);
                         range = req.headers.range;
                         positions = range.replace(/bytes=/, '').split('-');
@@ -84,7 +83,8 @@
                             start + '-' + end + '/' + total,
                         'Accept-Ranges': 'bytes',
                         'Content-Length': chunksize,
-                        'Content-Type': 'video/mp4'
+                        'Content-Type': 'video/mp4',
+                        'Expires': 'Mon, 27 Mar 2038 13:33:37 GMT'
                     };
                 } else {
                    statusCode = 200;
